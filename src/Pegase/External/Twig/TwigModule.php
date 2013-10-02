@@ -10,5 +10,9 @@ class TwigModule extends AbstractModule {
   public function get_name() {
     return "Template/Twig";
   }
+
+  public function get_path() {
+    return __DIR__;
+  }
 }
 
