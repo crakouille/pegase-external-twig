@@ -1,4 +1,4 @@
 pegase-external-twig
 ====================
 
-Pegase Twig Bridge (Service declaration, basic functions)
+Pegase Twig Bridge (Service declaration, basic functions).
