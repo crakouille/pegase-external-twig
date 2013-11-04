@@ -7,7 +7,7 @@ use \Pegase\External\Twig\Extensions\Path\PathFunction;
 use \Pegase\External\Twig\Extensions\Router\RouteFunction;
 use \Pegase\External\Twig\Extensions\Controller\RenderFunction;
 
-use \Pegase\External\Twig\Extensions\Loader\ExtensionLoader;
+use \Pegase\External\Twig\Loader\ExtensionLoader;
 
 use Pegase\Core\Exception\Objects\PegaseException;
 
@@ -24,7 +24,7 @@ class TwigService implements ServiceInterface {
     
     $root = $sm->get('pegase.core.path')->get_root();
 
-    $this->loader = new \Twig_Loader_Filesystem(
+    $loader = new \Twig_Loader_Filesystem(
       array(
         $root,
         "/"
@@ -32,7 +32,7 @@ class TwigService implements ServiceInterface {
     );
 
     $this->twig = new \Twig_Environment(
-      $this->loader,
+      $loader,
       array('debug' => true, 'strict_variables' => true)
       /*, 
       array('cache' => $root . 'app/cache/twig')*/
@@ -40,29 +40,14 @@ class TwigService implements ServiceInterface {
 
     $this->twig->addExtension(new \Twig_Extension_Debug());
 
-    $loader = new ExtensionLoader($sm);
-    $loader->set_service($this);
+    $this->loader = new ExtensionLoader($sm);
+    $this->loader->set_service($this);
 
-    $loader->load_from_yml("app/config/twig.yml");
-/*
-    // ajout de la fonction "path"
+    $this->loader->load_from_yml("app/config/twig.yml");
+  }
 
-    $test = new PathFunction($sm);
-    $function = new \Twig_SimpleFunction($test->get_name(), array($test, 'fn'));
-    $this->twig->addFunction($function);
-    // activer le cache en retirant les commentaires
-
-    // ajout de la fonction "route"
-
-    $test = new RouteFunction($sm);
-    $function = new \Twig_SimpleFunction($test->get_name(), array($test, 'fn'));
-    $this->twig->addFunction($function);
-
-    // ajout de la fonction "Render"
-
-    $test = new RenderFunction($sm);
-    $function = new \Twig_SimpleFunction($test->get_name(), array($test, 'fn'));
-    $this->twig->addFunction($function);*/
+  public function get_twig() {
+    return $this->twig;
   }
 
   public function render($file, $params = array()) {

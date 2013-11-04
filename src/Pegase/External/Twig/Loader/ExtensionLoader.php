@@ -59,9 +59,9 @@ class ExtensionLoader {
             throw new PegaseException($e_name . " should contain the 'method' field.");
           }
 
-          $class = new $s["class"]($sm);
+          $class = new $s["class"]($this->sm);
           $function = new \Twig_SimpleFunction($e_name, array($class, $s["method"]));
-          $this->_ts->addFunction($function);
+          $this->_ts->get_twig()->addFunction($function);
         }
         
         /*else if($s["type"] == "filter") {
@@ -69,7 +69,7 @@ class ExtensionLoader {
             throw new PegaseException($e_name . " should contain the 'method' field.");
           }
 
-          $class = new $s["class"]($sm);
+          $class = new $s["class"]($this->sm);
           $function = new \Twig_SimpleFunction($class->get_name(), array($class, $s["method"]));
           $this->_ts->addFunction($function);
         }*/
