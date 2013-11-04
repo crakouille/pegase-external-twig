@@ -7,6 +7,8 @@ use \Pegase\External\Twig\Extensions\Path\PathFunction;
 use \Pegase\External\Twig\Extensions\Router\RouteFunction;
 use \Pegase\External\Twig\Extensions\Controller\RenderFunction;
 
+use \Pegase\External\Twig\Extensions\Loader\ExtensionLoader;
+
 use Pegase\Core\Exception\Objects\PegaseException;
 
 class TwigService implements ServiceInterface {
@@ -17,14 +19,7 @@ class TwigService implements ServiceInterface {
 
   public function __construct($sm, $params = array()) {
 
-    // soit on utilise ça
-    //require_once (__DIR__ .  '/../../../../../../vendor/twig/twig/lib/Twig/Autoloader.php');
-    //\Twig_Autoloader::register();
-
-    // soit le require_once '../../../../../../vendor/autoload.php'; de composer
-    // -> c'est fait !
-
-    // initialisation
+    // initialization
     $this->sm = $sm;
     
     $root = $sm->get('pegase.core.path')->get_root();
@@ -45,6 +40,11 @@ class TwigService implements ServiceInterface {
 
     $this->twig->addExtension(new \Twig_Extension_Debug());
 
+    $loader = new ExtensionLoader($sm);
+    $loader->set_service($this);
+
+    $loader->load_from_yml("app/config/twig.yml");
+/*
     // ajout de la fonction "path"
 
     $test = new PathFunction($sm);
@@ -62,7 +62,7 @@ class TwigService implements ServiceInterface {
 
     $test = new RenderFunction($sm);
     $function = new \Twig_SimpleFunction($test->get_name(), array($test, 'fn'));
-    $this->twig->addFunction($function);
+    $this->twig->addFunction($function);*/
   }
 
   public function render($file, $params = array()) {
